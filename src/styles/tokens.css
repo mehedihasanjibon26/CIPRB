@@ -1,0 +1,27 @@
+/* Provisional palette: these are NOT verified official CIPRB brand colors.
+   Replace the brand token when approved identity assets are supplied. */
+@theme {
+  --color-brand: #155caa;
+  --color-navy: #10263d;
+  --color-white: #ffffff;
+  --color-background: #faf9f6;
+  --color-surface: #f1f3f5;
+  --color-foreground: #172b40;
+  --color-muted: #526171;
+  --color-border: #d6dce2;
+
+  --text-display: clamp(3rem, 7vw, 7.5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.04em;
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 5rem);
+  --spacing-section: clamp(4rem, 8vw, 8rem);
+  --container-content: 90rem;
+  --radius-panel: 0.75rem;
+  --shadow-soft: 0 0.5rem 2rem rgb(16 38 61 / 0.06);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-display: var(--font-inter), Arial, Helvetica, sans-serif;
+}
