@@ -1,0 +1,471 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import gsap from "gsap";
+
+type HeroSlide = {
+  category: string;
+  title: string;
+  description: string;
+  image: string;
+  position?: string;
+};
+
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+const slides: HeroSlide[] = [
+  {
+    category: "Child Safety",
+    title: "Life Saving Skill",
+    description:
+      "Empowering children with CPR and life-saving skills to respond confidently in emergencies.",
+    image: "/images/hero/life-saving.jpg",
+    position: "center center",
+  },
+  {
+    category: "Drowning Prevention",
+    title: "SwimSafe Training",
+    description:
+      "Practical survival swimming skills helping children become safer in and around water.",
+    image: "/images/hero/swimsafe.jpg",
+    position: "center 36%",
+  },
+  {
+    category: "Water Safety",
+    title: "SeaSafe Lifeguard",
+    description:
+      "Strengthening lifeguard skills and promoting safer beaches and coastal communities.",
+    image: "/images/hero/seasafe.jpg",
+    position: "center center",
+  },
+  {
+    category: "SwimSafe Programme",
+    title: "SwimSafe Graduation",
+    description:
+      "Celebrating the achievements of children completing their survival swimming training.",
+    image: "/images/hero/swimsafe-graduation.jpg",
+    position: "center 36%",
+  },
+  {
+    category: "Life-Saving Skills",
+    title: "Safer Communities",
+    description:
+      "Building practical water safety skills for children and communities across Bangladesh.",
+    image: "/images/hero/safer-communities.jpg",
+    position: "center 34%",
+  },
+  {
+    category: "Child Development",
+    title: "Anchal",
+    description:
+      "Creating safe and supportive environments for children and families in communities.",
+    image: "/images/hero/anchal.jpg",
+    position: "center 30%",
+  },
+  {
+    category: "Eye Health Research",
+    title: "Nationwide Blindness Survey",
+    description:
+      "Generating evidence to understand blindness and strengthen vision care across Bangladesh.",
+    image: "/images/hero/blindness-survey.jpg",
+    position: "center 30%",
+  },
+  {
+    category: "Drowning Prevention",
+    title: "Together for Safer Waters",
+    description:
+      "Raising awareness and strengthening drowning prevention for safer communities across Bangladesh.",
+    image: "/images/hero/safer-waters.jpg",
+    position: "center 28%",
+  },
+];
+
+const SLIDE_DURATION = 6500;
+
+export default function Hero() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const activeSlide = slides[activeIndex];
+
+  useEffect(() => {
+    const query = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+
+    const update = () => setReducedMotion(query.matches);
+
+    update();
+    query.addEventListener("change", update);
+
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const timer = window.setInterval(() => {
+      setActiveIndex(
+        (previous) => (previous + 1) % slides.length
+      );
+    }, SLIDE_DURATION);
+
+    return () => window.clearInterval(timer);
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || !contentRef.current) return;
+
+    const elements =
+      contentRef.current.querySelectorAll(
+        "[data-hero-reveal]"
+      );
+
+    const animation = gsap.fromTo(
+      elements,
+      {
+        opacity: 0,
+        y: 24,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "all",
+      }
+    );
+
+    return () => animation.kill();
+  }, [activeIndex, reducedMotion]);
+
+  return (
+    <section
+      id="home"
+      aria-label="CIPRB featured programmes"
+      className="bg-[#F7F9FC] px-3 pt-[104px] pb-4 sm:px-5 lg:px-8"
+    >
+      <div
+        className="
+          relative isolate mx-auto
+          min-h-[680px] w-full max-w-[1900px]
+          overflow-hidden rounded-[28px]
+          bg-white
+          shadow-[0_22px_75px_-40px_rgba(12,55,110,0.18)]
+          sm:rounded-[36px]
+          lg:h-[calc(100svh-120px)]
+          lg:min-h-[560px]
+        "
+      >
+        {/* Background slideshow */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0"
+        >
+          {slides.map((slide, index) => (
+            <div
+              key={slide.image}
+              className={`
+                absolute inset-0
+                bg-cover bg-no-repeat
+                transition-[opacity,transform]
+                duration-[1600ms] ease-in-out
+                motion-reduce:transition-none
+                ${
+                  activeIndex === index
+                    ? "scale-100 opacity-100"
+                    : "scale-[1.04] opacity-0"
+                }
+              `}
+              style={{
+                backgroundImage: `url("${BASE_PATH}${slide.image}")`,
+                backgroundPosition:
+                  slide.position ?? "center center",
+              }}
+            />
+          ))}
+
+          {/* subtle image wash */}
+          <div className="absolute inset-0 bg-[#08203A]/[0.04]" />
+        </div>
+
+        {/* LEFT WHITE CURVED MASK - Desktop */}
+        <svg
+          aria-hidden="true"
+          className="
+            pointer-events-none absolute inset-0 z-[1]
+            hidden h-full w-full lg:block
+          "
+          viewBox="0 0 1600 900"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient
+              id="hero-left-fill"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
+              <stop offset="0%" stopColor="#FFFFFF" />
+              <stop offset="80%" stopColor="#FFFFFF" />
+              <stop
+                offset="100%"
+                stopColor="#FFFFFF"
+                stopOpacity="0.92"
+              />
+            </linearGradient>
+
+            <linearGradient
+              id="hero-left-soft"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
+              <stop
+                offset="0%"
+                stopColor="#FFFFFF"
+                stopOpacity="0.82"
+              />
+              <stop
+                offset="100%"
+                stopColor="#FFFFFF"
+                stopOpacity="0"
+              />
+            </linearGradient>
+          </defs>
+
+          <path
+            d="
+              M0 0
+              H850
+              C770 70 730 150 705 255
+              C675 375 635 495 560 590
+              C495 672 400 736 260 790
+              C168 825 77 847 0 860
+              Z
+            "
+            fill="url(#hero-left-fill)"
+          />
+
+          <path
+            d="
+              M850 0
+              C770 70 730 150 705 255
+              C675 375 635 495 560 590
+              C495 672 400 736 260 790
+              C168 825 77 847 0 860
+              L0 900
+              C183 872 364 814 493 715
+              C602 631 679 516 731 367
+              C761 279 790 165 842 82
+              C866 45 901 16 935 0
+              Z
+            "
+            fill="url(#hero-left-soft)"
+          />
+        </svg>
+
+        {/* MOBILE WHITE FADE */}
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none absolute inset-0 z-[1]
+            lg:hidden
+          "
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 22%, rgba(255,255,255,0.9) 43%, #FFFFFF 58%, #FFFFFF 100%)",
+          }}
+        />
+
+        {/* BOTTOM WHITE FADE TO HIDE IMAGE TEXT */}
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none absolute inset-x-0 bottom-0 z-[2]
+            hidden h-[200px] lg:block
+          "
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.68) 36%, rgba(255,255,255,0.94) 68%, #F7F9FC 100%)",
+          }}
+        />
+
+        {/* RIGHT/BOTTOM PREMIUM ACCENT SHAPES */}
+        <svg
+          aria-hidden="true"
+          className="
+            pointer-events-none absolute right-0 bottom-0 z-[3]
+            hidden h-[44%] w-[36%] lg:block
+          "
+          viewBox="0 0 700 420"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M700 95 C555 120 474 188 396 269 C320 347 253 392 158 420 H700 Z"
+            fill="#D9ECFC"
+            fillOpacity="0.7"
+          />
+          <path
+            d="M700 188 C560 210 488 267 422 334 C376 380 332 404 284 420 H700 Z"
+            fill="#0C4DA2"
+            fillOpacity="0.16"
+          />
+        </svg>
+
+        {/* Hero content */}
+        <div
+          className="
+            relative z-[4]
+            flex min-h-[680px]
+            flex-col justify-end
+            px-7 pt-[292px] pb-12
+            sm:px-12 sm:pt-[320px]
+            lg:h-full lg:min-h-0
+            lg:justify-start
+            lg:px-[6%]
+            lg:pt-[112px]
+            lg:pb-0
+            2xl:px-[7%]
+            2xl:pt-[118px]
+          "
+        >
+          <div
+            key={activeIndex}
+            ref={contentRef}
+            aria-live="polite"
+            aria-atomic="true"
+            className="w-full max-w-[720px] lg:w-[48%]"
+          >
+            <div
+              data-hero-reveal
+              className="mb-6 flex items-center gap-4"
+            >
+              <span className="h-[2px] w-11 shrink-0 bg-[#0C4DA2]" />
+
+              <span
+                className="
+                  text-[11px] font-bold
+                  tracking-[0.2em]
+                  text-[#0C4DA2] uppercase
+                "
+              >
+                {activeSlide.category}
+              </span>
+            </div>
+
+            <h1
+              data-hero-reveal
+              className="
+                max-w-[760px]
+                font-serif
+                text-[clamp(3.35rem,7vw,7.05rem)]
+                leading-[0.99]
+                font-normal
+                tracking-[-0.07em]
+                text-[#102945]
+                lg:text-[clamp(3.4rem,5.3vw,6.7rem)]
+              "
+            >
+              {activeSlide.title}
+              <span className="text-[#0C4DA2]">.</span>
+            </h1>
+
+            <p
+              data-hero-reveal
+              className="
+                mt-7 max-w-[520px]
+                text-[16px] leading-[1.8]
+                text-[#415D79]
+                sm:text-[18px]
+                lg:mt-8
+                xl:text-[19px]
+              "
+            >
+              {activeSlide.description}
+            </p>
+
+            <div
+              data-hero-reveal
+              className="
+                mt-9 flex flex-wrap items-center gap-6
+                lg:mt-10
+              "
+            >
+              <Link
+                href="#about"
+                className="
+                  group inline-flex min-h-[56px]
+                  items-center gap-5
+                  rounded-full bg-[#0C4DA2]
+                  py-1.5 pr-1.5 pl-6
+                  text-[13px] font-semibold text-white
+                  shadow-[0_12px_30px_-14px_rgba(12,77,162,0.4)]
+                  transition-all duration-300
+                  hover:-translate-y-0.5
+                  hover:bg-[#083E84]
+                  focus-visible:outline-2
+                  focus-visible:outline-offset-4
+                  focus-visible:outline-[#0C4DA2]
+                  motion-reduce:transform-none
+                "
+              >
+                Discover CIPRB
+
+                <span
+                  className="
+                    flex h-10 w-10
+                    items-center justify-center
+                    rounded-full bg-white
+                    text-[#0C4DA2]
+                    transition-transform duration-300
+                    group-hover:rotate-45
+                    motion-reduce:transform-none
+                  "
+                >
+                  <ArrowUpRight
+                    size={18}
+                    strokeWidth={1.8}
+                  />
+                </span>
+              </Link>
+
+              <Link
+                href="#research"
+                className="
+                  group inline-flex min-h-12
+                  items-center gap-2
+                  text-[13px] font-semibold
+                  text-[#183C65]
+                  transition-colors duration-300
+                  hover:text-[#0C4DA2]
+                  focus-visible:outline-2
+                  focus-visible:outline-offset-4
+                  focus-visible:outline-[#0C4DA2]
+                "
+              >
+                Our Research
+
+                <ArrowUpRight
+                  size={17}
+                  className="
+                    transition-transform duration-300
+                    group-hover:translate-x-1
+                    group-hover:-translate-y-1
+                    motion-reduce:transform-none
+                  "
+                />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

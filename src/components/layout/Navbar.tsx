@@ -274,7 +274,7 @@ export default function Navbar() {
           <SearchField compact />
 
           <Link
-            href="https://www.ciprb.org/"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex h-[52px] shrink-0 items-center gap-3 rounded-full bg-[#0C4DA2] py-1.5 pr-1.5 pl-5 text-[12px] font-bold whitespace-nowrap text-white shadow-[0_10px_20px_-12px_rgba(12,77,162,0.5)] transition-all duration-300 hover:bg-[#083D84] hover:shadow-[0_14px_24px_-12px_rgba(12,77,162,0.6)]"
@@ -290,7 +290,7 @@ export default function Navbar() {
         {/* Tablet / mobile actions */}
         <div className="flex shrink-0 items-center gap-2 2xl:hidden">
           <Link
-            href="https://www.ciprb.org/"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden h-11 items-center rounded-full bg-[#0C4DA2] px-5 text-[12px] font-bold text-white sm:inline-flex"
@@ -350,7 +350,7 @@ export default function Navbar() {
           </div>
 
           <Link
-            href="https://www.ciprb.org/"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 flex h-12 items-center justify-center rounded-full bg-[#0C4DA2] text-[13px] font-bold text-white sm:hidden"

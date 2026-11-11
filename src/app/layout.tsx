@@ -1,3 +1,4 @@
+import DisableCiprbRedirects from "@/components/DisableCiprbRedirects";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -40,7 +41,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        <DisableCiprbRedirects />{children}</body>
     </html>
   );
 }

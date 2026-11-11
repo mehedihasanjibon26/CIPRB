@@ -354,7 +354,7 @@ export default function Updates() {
       {/* Bottom CTA */}
       <div className="relative z-10 mt-9 flex justify-center">
         <Link
-          href="https://www.ciprb.org/events"
+          href="#"
           target="_blank"
           rel="noopener noreferrer"
           className="group inline-flex min-h-[53px] items-center gap-5 rounded-full border border-[#0C64D5] bg-white py-1.5 pr-1.5 pl-6 text-[12px] font-semibold text-[#0C4DA2] shadow-[0_10px_25px_-18px_rgba(12,77,162,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#EAF5FF] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0C64D5]"

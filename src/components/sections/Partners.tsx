@@ -229,7 +229,7 @@ export default function Partners() {
       {/* Bottom CTA */}
       <div className="relative z-10 mt-12 flex justify-center lg:mt-14">
         <Link
-          href="https://www.ciprb.org/our-partners"
+          href="#"
           target="_blank"
           rel="noopener noreferrer"
           className="group inline-flex min-h-[54px] items-center gap-5 rounded-full border border-[#0C4DA2] bg-white py-1.5 pr-1.5 pl-6 text-[13px] font-semibold text-[#0C4DA2] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#EDF6FF]"

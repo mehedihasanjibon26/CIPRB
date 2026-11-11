@@ -417,7 +417,7 @@ export default function Focus() {
             </button>
 
             <Link
-              href="https://www.ciprb.org/"
+              href="#"
               className="group inline-flex items-center gap-2 text-[12px] font-semibold text-[#9ED7FF] transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#79C8FF]"
             >
               Explore Our Work
