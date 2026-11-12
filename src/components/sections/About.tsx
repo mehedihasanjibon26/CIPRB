@@ -197,7 +197,7 @@ export default function About() {
       ref={sectionRef}
       id="about"
       aria-labelledby="about-title"
-      className="relative isolate overflow-hidden bg-[#F8FBFF] py-20 text-[#0C2542] sm:py-24 lg:py-28"
+      className="relative z-10 isolate overflow-hidden rounded-t-[32px] bg-[#F8FBFF] py-20 text-[#0C2542] sm:py-24 lg:py-28 shadow-[0_-24px_65px_rgba(12,77,162,0.10)]"
     >
       {/* Premium background gradient */}
       <div

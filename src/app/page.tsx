@@ -24,12 +24,28 @@ export default function HomePage() {
         id="main-content"
         className="min-h-svh bg-[#F7F9FC]"
       >
-        {/* Extra space between floating Navbar and Hero */}
-        <div className="pt-4">
-          <Hero />
+        {/*
+          HERO + ABOUT SCROLL OVERLAP
+
+          Both sections must share the SAME parent.
+
+          Hero stays sticky while About scrolls
+          above it. Scrolling upward reverses
+          the effect naturally.
+        */}
+        <div className="relative isolate">
+          {/* Hero: stays behind About */}
+          <div className="sticky top-0 z-0">
+            <Hero />
+          </div>
+
+          {/* About: slides over Hero on scroll */}
+          <div className="relative z-10">
+            <About />
+          </div>
         </div>
 
-        <About />
+        {/* Remaining sections stay unchanged */}
         <Focus />
         <Innovations />
         <Updates />
