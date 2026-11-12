@@ -149,7 +149,7 @@ function SearchField({
       method="get"
       role="search"
       className={`group relative flex items-center rounded-full border border-[#D6E6F6] bg-[#F5F9FD]/85 transition-all duration-300 focus-within:border-[#64AFF6] focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(12,100,213,0.08)] ${
-        compact ? "h-[43px] w-[165px]" : "h-12 w-full"
+        compact ? "h-[38px] w-[165px]" : "h-12 w-full"
       }`}
     >
       <Search
@@ -163,7 +163,7 @@ function SearchField({
         name="title"
         aria-label="Search CIPRB website"
         placeholder="Search..."
-        className="h-full w-full min-w-0 bg-transparent px-2 text-[13px] text-[#17355B] outline-none placeholder:text-[#849AB2]"
+        className="h-full w-full min-w-0 bg-transparent px-2 text-[17px] text-[#17355B] outline-none placeholder:text-[#849AB2]"
       />
 
       <button
@@ -198,7 +198,7 @@ function DesktopMenu({
           href={item.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="relative z-10 inline-flex h-11 items-center gap-[6px] whitespace-nowrap text-[12px] font-semibold text-[#243A55] transition-colors duration-300 hover:text-[#0C4DA2] focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-[#0C64D5] min-[1700px]:text-[13px]"
+          className="relative z-10 inline-flex h-11 items-center gap-[6px] whitespace-nowrap text-[14px] font-semibold text-[#243A55] transition-colors duration-300 hover:text-[#0C4DA2] focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-[#0C64D5] min-[1700px]:text-[15px]"
         >
           {item.label}
 
@@ -277,11 +277,11 @@ export default function Navbar() {
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex h-[52px] shrink-0 items-center gap-3 rounded-full bg-[#0C4DA2] py-1.5 pr-1.5 pl-5 text-[12px] font-bold whitespace-nowrap text-white shadow-[0_10px_20px_-12px_rgba(12,77,162,0.5)] transition-all duration-300 hover:bg-[#083D84] hover:shadow-[0_14px_24px_-12px_rgba(12,77,162,0.6)]"
+            className="group inline-flex h-[44px] shrink-0 items-center gap-3 rounded-full bg-[#0C4DA2] py-1 pr-1 pl-5 text-[12px] font-bold whitespace-nowrap text-white shadow-[0_10px_20px_-12px_rgba(12,77,162,0.5)] transition-all duration-300 hover:bg-[#083D84] hover:shadow-[0_14px_24px_-12px_rgba(12,77,162,0.6)]"
           >
-            Donate Now
+            <span className="ciprb-donate-pulse inline-block origin-center">Donate Now</span>
 
-            <span className="flex h-[39px] w-[39px] items-center justify-center rounded-full bg-white text-[#0C4DA2] transition-transform duration-300 group-hover:rotate-45">
+            <span className="flex h-[33px] w-[33px] items-center justify-center rounded-full bg-white text-[#0C4DA2] transition-transform duration-300 group-hover:rotate-45">
               <ArrowUpRight size={19} />
             </span>
           </Link>
@@ -295,7 +295,7 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="hidden h-11 items-center rounded-full bg-[#0C4DA2] px-5 text-[12px] font-bold text-white sm:inline-flex"
           >
-            Donate Now
+            <span className="ciprb-donate-pulse inline-block origin-center">Donate Now</span>
           </Link>
 
           <button
@@ -322,7 +322,7 @@ export default function Navbar() {
           <div className="mt-4 divide-y divide-[#E8F0F8]">
             {navigation.map((item) => (
               <details key={item.label} className="group/details">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-[14px] font-semibold text-[#1D3B61] [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-[17px] font-semibold text-[#1D3B61] [&::-webkit-details-marker]:hidden">
                   {item.label}
 
                   <ChevronDown
@@ -339,7 +339,7 @@ export default function Navbar() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setMobileOpen(false)}
-                      className="block rounded-lg px-3 py-2.5 text-[13px] text-[#42617F] transition-colors hover:bg-white hover:text-[#0C4DA2]"
+                      className="block rounded-lg px-3 py-2.5 text-[17px] text-[#42617F] transition-colors hover:bg-white hover:text-[#0C4DA2]"
                     >
                       {link.label}
                     </Link>
@@ -353,12 +353,36 @@ export default function Navbar() {
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 flex h-12 items-center justify-center rounded-full bg-[#0C4DA2] text-[13px] font-bold text-white sm:hidden"
+            className="mt-4 flex h-12 items-center justify-center rounded-full bg-[#0C4DA2] text-[17px] font-bold text-white sm:hidden"
           >
-            Donate Now
+            <span className="ciprb-donate-pulse inline-block origin-center">Donate Now</span>
           </Link>
         </div>
       )}
+      <style jsx global>{`
+        @keyframes donatePulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.12);
+            opacity: 0.62;
+          }
+        }
+      `}</style>
+      <style jsx global>{`
+  .ciprb-donate-pulse {
+    animation: donatePulse 2s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ciprb-donate-pulse {
+      animation: none;
+    }
+  }
+`}</style>
     </header>
   );
 }
