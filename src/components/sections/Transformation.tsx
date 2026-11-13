@@ -1,178 +1,422 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useEffect, useRef } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
+  ArrowDown,
   HeartHandshake,
+  HeartPulse,
   MapPin,
   Quote,
+  Sparkles,
+  GraduationCap,
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-const chapters = [
+type Story = {
+  id: string;
+  eyebrow: string;
+  category: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  location: string;
+  paragraphs: string[];
+  quote?: string;
+  highlight: string;
+  highlightDescription: string;
+  demo?: boolean;
+};
+
+const stories: Story[] = [
   {
-    label: "The Journey",
-    description:
+    id: "sabitri",
+    eyebrow: "The Journey to Recovery",
+    category: "Health & Rehabilitation",
+    title: "Sabitri Robidas",
+    subtitle: "From Despair to Hope",
+    image:
+      "/images/transformation/transformation-sabitri.png",
+    location: "Moulvibazar, Bangladesh",
+    paragraphs: [
       "At just 17, Sabitri endured a difficult labour, lost her first child and developed obstetric fistula, leading to years of isolation and emotional distress.",
+      "After receiving specialist treatment and successful corrective surgery, Sabitri began rebuilding her life. Rehabilitation support, skills training and a sewing machine helped her work towards financial independence.",
+    ],
+    quote:
+      "I never thought I'd regain my life after losing my child and suffering from fistula.",
+    highlight: "A new beginning",
+    highlightDescription:
+      "Health, dignity and independence",
   },
   {
-    label: "A Path to Healing",
-    description:
-      "After years of suffering, Sabitri received specialist treatment and successful corrective surgery, helping her regain her health and dignity.",
+    id: "mother",
+    eyebrow: "A Future Full of Possibilities",
+    category: "Family & Community Wellbeing",
+    title: "A Mother's Hope",
+    subtitle: "A Daughter's Future",
+    image:
+      "/images/transformation/transformation-story-2.png",
+    location: "Rural Bangladesh",
+    paragraphs: [
+      "For a mother in rural Bangladesh, building a safer future for her daughter begins with the confidence to make informed decisions about her family's health and wellbeing.",
+      "Through community awareness, practical health knowledge and family support, she discovers how everyday choices can create opportunities for her daughter to grow, learn and thrive.",
+    ],
+    highlight: "Stronger families",
+    highlightDescription:
+      "Knowledge, confidence and hope",
+    demo: true,
   },
   {
-    label: "A New Beginning",
-    description:
-      "With rehabilitation support, a sewing machine and skills training, Sabitri began earning an income and rebuilding her independence.",
+    id: "community",
+    eyebrow: "Health Beyond the Clinic",
+    category: "Community Health Awareness",
+    title: "Care That Reaches",
+    subtitle: "Every Home",
+    image:
+      "/images/transformation/transformation-story-3.png",
+    location: "Rural Bangladesh",
+    paragraphs: [
+      "A simple conversation can become the beginning of meaningful change. A community health worker visits a family to share practical guidance on child wellbeing and injury prevention.",
+      "By making health information more accessible, community outreach can build trust, encourage safer practices and support healthier lives across households.",
+    ],
+    highlight: "Care within reach",
+    highlightDescription:
+      "Awareness, prevention and trust",
+    demo: true,
   },
 ];
 
-const STORY_URL = "https://www.ciprb.org/case-story";
+function StoryPanel({
+  story,
+  index,
+}: {
+  story: Story;
+  index: number;
+}) {
+  const HighlightIcon =
+    index === 0
+      ? HeartPulse
+      : index === 1
+        ? GraduationCap
+        : HeartHandshake;
+
+  const number = String(index + 1).padStart(2, "0");
+
+  return (
+    <article
+      aria-label={`${story.title}: ${story.subtitle}`}
+      className="grid h-full w-full overflow-hidden rounded-[28px] border border-white/80 bg-white shadow-[0_25px_80px_-40px_rgba(12,70,145,0.35)] md:grid-cols-[46%_54%] lg:rounded-[34px]"
+    >
+      {/* STORY IMAGE */}
+      <div className="relative min-h-[300px] overflow-hidden bg-[#DCECF9] md:min-h-0">
+        <div
+          data-story-image
+          className="absolute inset-0 scale-[1.04] bg-cover bg-center"
+          style={{
+            backgroundImage: `url("${BASE_PATH}${story.image}")`,
+          }}
+          role="img"
+          aria-label={`Illustrative image for ${story.title}`}
+        />
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#052B60]/90 via-[#063E7D]/15 to-[#062E64]/20" />
+
+        <div className="absolute left-6 top-6 z-10 sm:left-8 sm:top-8">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/20 px-4 py-2 text-[11px] font-semibold text-white backdrop-blur-xl">
+            <Sparkles size={15} />
+            {story.category}
+          </span>
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-5 top-[20%] font-serif text-[clamp(8rem,15vw,15rem)] leading-none text-white/[0.14]"
+        >
+          {number}
+        </div>
+
+        <div className="absolute bottom-9 left-7 right-7 z-10 sm:bottom-11 sm:left-10">
+          <div className="flex items-center gap-2 text-[13px] font-medium text-white/90">
+            <MapPin size={17} />
+            {story.location}
+          </div>
+
+          <div className="mt-5 h-[2px] w-14 bg-[#8CCEFF]" />
+
+          <p className="mt-4 max-w-[340px] font-serif text-[clamp(1.6rem,2.5vw,2.6rem)] leading-[1.2] text-white">
+            Every life has a story worth telling.
+          </p>
+        </div>
+
+        <svg
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 right-0 h-[95px] w-full"
+          viewBox="0 0 600 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0 100C200 100 350 75 470 40C525 24 570 12 600 0V100Z"
+            fill="#77C5FF"
+            fillOpacity="0.27"
+          />
+          <path
+            d="M260 100C410 93 530 58 600 28V100Z"
+            fill="#0C64D5"
+            fillOpacity="0.35"
+          />
+        </svg>
+      </div>
+
+      {/* STORY CONTENT */}
+      <div className="relative flex min-h-0 flex-col justify-center overflow-y-auto px-7 py-8 sm:px-10 md:py-9 lg:px-11 xl:px-14">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-32 -top-32 h-[360px] w-[360px] rounded-full bg-[#E9F5FF] blur-[80px]"
+        />
+
+        <div className="relative z-10">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="h-[2px] w-8 bg-[#0C64D5]" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#0C64D5]">
+                Chapter {number}
+              </span>
+            </div>
+
+            <span className="rounded-full border border-[#D9EAF9] bg-[#F2F8FF] px-3 py-1 text-[11px] font-semibold text-[#6388AC]">
+              {number} / 03
+            </span>
+          </div>
+
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#538FC7]">
+            {story.eyebrow}
+          </p>
+
+          <h3 className="font-serif text-[clamp(2.1rem,3.1vw,3.9rem)] leading-[1.07] tracking-[-0.055em] text-[#102B50]">
+            {story.title}
+            <span className="mt-1 block text-[#0C64D5]">
+              {story.subtitle}
+            </span>
+          </h3>
+
+          <div className="mt-5 space-y-3">
+            {story.paragraphs.map((paragraph) => (
+              <p
+                key={paragraph}
+                className="text-[14px] leading-[1.7] text-[#536F8D] xl:text-[15px]"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {story.quote && (
+            <blockquote className="mt-5 rounded-r-[14px] border-l-[3px] border-[#0C64D5] bg-[#EDF5FF] px-5 py-3">
+              <Quote
+                size={18}
+                className="mb-1 text-[#0C64D5]/70"
+              />
+              <p className="text-[13px] italic leading-[1.6] text-[#497CA9] xl:text-[14px]">
+                “{story.quote}”
+              </p>
+            </blockquote>
+          )}
+
+          <div className="mt-5 flex items-center gap-4 rounded-[17px] border border-[#DCEAF9] bg-gradient-to-r from-[#F5FAFF] to-[#E0F0FF] px-4 py-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-white text-[#0C64D5] shadow-sm">
+              <HighlightIcon size={24} strokeWidth={1.8} />
+            </div>
+
+            <div>
+              <p className="text-[14px] font-bold text-[#164875]">
+                {story.highlight}
+              </p>
+              <p className="mt-0.5 text-[12px] text-[#5A7B9C]">
+                {story.highlightDescription}
+              </p>
+            </div>
+          </div>
+
+          {story.demo && (
+            <p className="mt-3 text-[11px] text-[#8A9BAE]">
+              Illustrative demo story, not a documented
+              beneficiary case.
+            </p>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export default function Transformation() {
   const sectionRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const [chapter, setChapter] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const slidesRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
-    const query = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    );
-
-    const update = () => setReducedMotion(query.matches);
-
-    update();
-    query.addEventListener("change", update);
-
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  // Section entrance animation
-  useEffect(() => {
-    if (!sectionRef.current || reducedMotion) return;
-
     gsap.registerPlugin(ScrollTrigger);
 
+    const section = sectionRef.current;
+    const pin = pinRef.current;
+
+    if (!section || !pin) return;
+
+    const slides = slidesRef.current.filter(Boolean);
+
+    if (slides.length !== stories.length) return;
+
     const ctx = gsap.context(() => {
+      // Heading entrance
       gsap.fromTo(
         "[data-story-heading]",
         {
           opacity: 0,
-          y: 30,
+          y: 26,
         },
         {
           opacity: 1,
           y: 0,
-          stagger: 0.12,
-          duration: 0.9,
+          duration: 0.85,
+          stagger: 0.1,
           ease: "power3.out",
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 82%",
+            trigger: "[data-story-header]",
+            start: "top 85%",
             once: true,
           },
         }
       );
 
-      gsap.fromTo(
-        "[data-story-panel]",
-        {
-          opacity: 0,
-          y: 42,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.05,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: "[data-story-panel]",
-            start: "top 94%",
-            once: true,
-          },
+      // Pinned single-panel experience on desktop
+      const media = gsap.matchMedia();
+
+      media.add(
+        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          // Only first story is visible initially
+          gsap.set(slides[0], {
+            autoAlpha: 1,
+            y: 0,
+          });
+
+          gsap.set(slides.slice(1), {
+            autoAlpha: 0,
+            y: 35,
+          });
+
+          const timeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: pin,
+              start: "top 105px",
+              end: () =>
+                `+=${Math.round(window.innerHeight * 2.4)}`,
+              pin: true,
+              pinSpacing: true,
+              scrub: 0.8,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          // Initial hold: Story 1 remains visible
+          timeline.to({}, { duration: 0.9 });
+
+          // Story 1 -> Story 2
+          timeline.to(
+            slides[0],
+            {
+              autoAlpha: 0,
+              y: -35,
+              duration: 0.65,
+              ease: "power2.inOut",
+            }
+          );
+
+          timeline.fromTo(
+            slides[1],
+            {
+              autoAlpha: 0,
+              y: 35,
+            },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.65,
+              ease: "power2.inOut",
+            },
+            "<"
+          );
+
+          // Hold Story 2
+          timeline.to({}, { duration: 1.1 });
+
+          // Story 2 -> Story 3
+          timeline.to(
+            slides[1],
+            {
+              autoAlpha: 0,
+              y: -35,
+              duration: 0.65,
+              ease: "power2.inOut",
+            }
+          );
+
+          timeline.fromTo(
+            slides[2],
+            {
+              autoAlpha: 0,
+              y: 35,
+            },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.65,
+              ease: "power2.inOut",
+            },
+            "<"
+          );
+
+          // Final hold before normal scrolling resumes
+          timeline.to({}, { duration: 1.1 });
         }
       );
 
-      gsap.fromTo(
-        "[data-story-photo]",
-        {
-          scale: 1.08,
-        },
-        {
-          scale: 1,
-          duration: 1.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: "[data-story-panel]",
-            start: "top 95%",
-            once: true,
-          },
-        }
-      );
-    }, sectionRef);
+      // Clean up media-specific animations
+      return () => {
+        media.revert();
+      };
+    }, section);
 
-    return () => ctx.revert();
-  }, [reducedMotion]);
-
-  // Reveal content when a story chapter changes
-  useEffect(() => {
-    if (!contentRef.current || reducedMotion) return;
-
-    const elements = contentRef.current.querySelectorAll(
-      "[data-chapter-reveal]"
-    );
-
-    const animation = gsap.fromTo(
-      elements,
-      {
-        opacity: 0,
-        y: 14,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        stagger: 0.07,
-        duration: 0.55,
-        ease: "power2.out",
-        clearProps: "all",
-      }
-    );
-
-    return () => animation.kill();
-  }, [chapter, reducedMotion]);
-
-  const goToChapter = (index: number) => {
-    setChapter(
-      (index + chapters.length) % chapters.length
-    );
-  };
+    return () => {
+      ctx.revert();
+    };
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       id="transformation"
       aria-labelledby="transformation-heading"
-      className="relative isolate overflow-hidden bg-[#F3F8FE] py-16 text-[#102945] sm:py-20 lg:py-24"
+      className="relative isolate overflow-hidden bg-[#F3F8FE] pb-20 pt-20 text-[#102945] sm:pt-24 lg:pt-28"
     >
-      {/* Ambient background */}
+      {/* Premium background */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_34%,rgba(255,255,255,0.98),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse at 5% 5%,rgba(184,224,255,0.45),transparent 40%),radial-gradient(ellipse at 95% 80%,rgba(198,230,255,0.45),transparent 45%),linear-gradient(180deg,#F9FCFF 0%,#EFF7FF 55%,#E7F3FF 100%)",
+        }}
       />
 
-      {/* Upper decorative wave */}
+      {/* Decorative upper wave */}
       <svg
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 left-0 h-[190px] w-[370px] sm:h-[250px] sm:w-[530px]"
+        className="pointer-events-none absolute left-0 top-0 h-[200px] w-[380px] sm:h-[250px] sm:w-[530px]"
         viewBox="0 0 530 250"
         preserveAspectRatio="none"
       >
@@ -188,18 +432,19 @@ export default function Transformation() {
       </svg>
 
       <div className="relative z-10 mx-auto max-w-[1550px] px-5 sm:px-9 lg:px-14">
-        {/* Centered heading */}
-        <header className="mx-auto mb-10 max-w-[1040px] text-center lg:mb-12">
+        {/* Heading */}
+        <header
+          data-story-header
+          className="mx-auto mb-12 max-w-[1000px] text-center lg:mb-14"
+        >
           <div
             data-story-heading
             className="mb-5 flex items-center justify-center gap-4"
           >
             <span className="h-[2px] w-10 bg-[#0C64D5]" />
-
-            <span className="text-[11px] font-bold tracking-[0.18em] text-[#103C7A] uppercase">
-              Real-Life Success Stories
+            <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#103C7A]">
+              Stories of Resilience & Hope
             </span>
-
             <span className="h-[2px] w-10 bg-[#0C64D5]" />
           </div>
 
@@ -216,220 +461,79 @@ export default function Transformation() {
 
           <p
             data-story-heading
-            className="mx-auto mt-5 max-w-[750px] text-[15px] leading-[1.7] text-[#5D789A] sm:text-[17px]"
+            className="mx-auto mt-5 max-w-[750px] text-[15px] leading-[1.75] text-[#5D789A] sm:text-[17px]"
           >
-            Real people. Real change. Explore inspiring
-            journeys of resilience, empowerment and hope
-            from the communities we serve.
+            Explore journeys of resilience,
+            empowerment and hope through an
+            immersive storytelling experience.
           </p>
+
+          <div
+            data-story-heading
+            className="mt-7 flex justify-center"
+          >
+            <span className="inline-flex items-center gap-3 rounded-full border border-[#D4E7F8] bg-white/80 px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4E87BE] shadow-sm">
+              <ArrowDown size={17} />
+              Scroll to explore stories
+            </span>
+          </div>
         </header>
 
-        {/* Story presentation */}
-        <div className="relative mx-auto max-w-[1250px]">
-          {/* Desktop previous arrow */}
-          <button
-            type="button"
-            onClick={() => goToChapter(chapter - 1)}
-            aria-label="Previous story chapter"
-            className="absolute top-1/2 -left-14 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#DFEBF7] bg-white text-[#4A82BA] shadow-[0_8px_28px_rgba(12,77,162,0.1)] transition-all duration-300 hover:-translate-x-1 hover:bg-[#0C64D5] hover:text-white focus-visible:outline-2 focus-visible:outline-[#0C64D5] xl:flex"
-          >
-            <ArrowLeft size={20} />
-          </button>
-
-          <article
-            data-story-panel
-            className="grid overflow-hidden rounded-[26px] border border-white/80 bg-white shadow-[0_22px_70px_-38px_rgba(12,77,162,0.28)] md:grid-cols-[0.47fr_0.53fr] lg:min-h-[510px] lg:rounded-[32px]"
-          >
-            {/* Photograph */}
-            <div className="relative min-h-[390px] overflow-hidden bg-[#DAE9F7] sm:min-h-[470px] md:min-h-0">
+        {/* DESKTOP: ONE PINNED PANEL */}
+        <div
+          ref={pinRef}
+          className="relative hidden w-full lg:block"
+        >
+          <div className="relative mx-auto h-[min(670px,calc(100svh-125px))] min-h-[520px] max-w-[1250px]">
+            {stories.map((story, index) => (
               <div
-                data-story-photo
-                role="img"
-                aria-label="Illustrative rural Bangladesh portrait accompanying the story of Sabitri Robidas"
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url("${BASE_PATH}/images/transformation/transformation-sabitri.png")`,
-                  backgroundPosition: "center",
+                key={story.id}
+                ref={(element) => {
+                  if (element) {
+                    slidesRef.current[index] = element;
+                  }
                 }}
-              />
-
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#052958]/95 via-[#063C77]/15 to-transparent" />
-
-              {/* Photo category */}
-              <div className="absolute top-6 left-6 sm:top-8 sm:left-8">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-[#0C64D5] px-4 py-2 text-[10px] font-bold tracking-[0.07em] text-white uppercase shadow-lg">
-                  <HeartHandshake size={16} />
-                  Success Story
-                </span>
-              </div>
-
-              {/* Photo bottom metadata */}
-              <div className="absolute right-6 bottom-9 left-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-[12px] font-medium text-white sm:right-9 sm:left-9">
-                <span className="inline-flex items-center gap-2">
-                  <MapPin size={18} />
-                  Moulvibazar, Bangladesh
-                </span>
-
-                <span className="inline-flex items-center gap-2">
-                  <HeartHandshake size={18} />
-                  Community Health
-                </span>
-              </div>
-
-              {/* Bottom blue wave */}
-              <svg
-                aria-hidden="true"
-                className="pointer-events-none absolute right-0 bottom-0 h-[80px] w-full"
-                viewBox="0 0 550 90"
-                preserveAspectRatio="none"
+                className="absolute inset-0"
+                style={{
+                  opacity: index === 0 ? 1 : 0,
+                  visibility:
+                    index === 0 ? "visible" : "hidden",
+                  zIndex: index + 1,
+                }}
+                aria-label={`Story ${index + 1} of ${stories.length}`}
               >
-                <path
-                  d="M0 90 C185 90 320 82 430 49 C475 36 519 18 550 8 V90Z"
-                  fill="#0C64D5"
-                  fillOpacity="0.75"
+                <StoryPanel
+                  story={story}
+                  index={index}
                 />
-
-                <path
-                  d="M240 90 C385 82 465 61 550 38 V90Z"
-                  fill="#59B5FF"
-                  fillOpacity="0.75"
-                />
-              </svg>
-            </div>
-
-            {/* Story content */}
-            <div className="flex flex-col justify-center px-7 py-10 sm:px-10 lg:px-12 lg:py-12 xl:px-14">
-              <div className="mb-5 flex items-center gap-3">
-                <span className="h-[2px] w-8 bg-[#0C64D5]" />
-
-                <span className="text-[11px] font-bold tracking-[0.14em] text-[#0C64D5] uppercase">
-                  {chapters[chapter].label}
-                </span>
               </div>
-
-              <h3 className="max-w-[640px] font-serif text-[clamp(2.2rem,3vw,3.7rem)] leading-[1.1] font-semibold tracking-[-0.055em] text-[#10264C]">
-                Sabitri Robidas: From Despair to Hope
-              </h3>
-
-              {/* Source-based quote */}
-              <blockquote className="relative mt-7 rounded-r-[15px] border-l-[4px] border-[#0C64D5] bg-[#EDF5FF] px-6 py-5">
-                <Quote
-                  size={20}
-                  className="mb-2 text-[#0C64D5]/70"
-                />
-
-                <p className="text-[14px] leading-[1.7] italic text-[#497CA9] sm:text-[16px]">
-                  “I never thought I&apos;d regain my life
-                  after losing my child and suffering from
-                  fistula.”
-                </p>
-              </blockquote>
-
-              <div
-                key={chapter}
-                ref={contentRef}
-                aria-live="polite"
-                aria-atomic="true"
-                className="mt-6"
-              >
-                <p
-                  data-chapter-reveal
-                  className="text-[15px] leading-[1.8] text-[#607A98] sm:text-[16px]"
-                >
-                  {chapters[chapter].description}
-                </p>
-              </div>
-
-              <div className="mt-8">
-                <Link
-                  href={STORY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex min-h-[52px] items-center gap-5 rounded-full bg-[#0C64D5] py-1.5 pr-1.5 pl-6 text-[13px] font-bold text-white shadow-[0_12px_30px_-16px_rgba(12,77,162,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#0A4FA9] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0C64D5]"
-                >
-                  Read Full Story
-
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:translate-x-1">
-                    <ArrowUpRight size={19} />
-                  </span>
-                </Link>
-              </div>
-            </div>
-          </article>
-
-          {/* Desktop next arrow */}
-          <button
-            type="button"
-            onClick={() => goToChapter(chapter + 1)}
-            aria-label="Next story chapter"
-            className="absolute top-1/2 -right-14 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#DFEBF7] bg-white text-[#4A82BA] shadow-[0_8px_28px_rgba(12,77,162,0.1)] transition-all duration-300 hover:translate-x-1 hover:bg-[#0C64D5] hover:text-white focus-visible:outline-2 focus-visible:outline-[#0C64D5] xl:flex"
-          >
-            <ArrowRight size={20} />
-          </button>
-
-          {/* Pagination and mobile navigation */}
-          <div className="mt-7 flex items-center justify-center gap-6">
-            <button
-              type="button"
-              onClick={() => goToChapter(chapter - 1)}
-              aria-label="Previous chapter"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#D4E6F8] bg-white text-[#0C64D5] xl:hidden"
-            >
-              <ArrowLeft size={18} />
-            </button>
-
-            <div
-              role="group"
-              aria-label="Story chapter navigation"
-              className="flex items-center gap-3"
-            >
-              {chapters.map((item, index) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  aria-label={`Show ${item.label}`}
-                  aria-pressed={chapter === index}
-                  onClick={() => goToChapter(index)}
-                  className={`h-[7px] rounded-full transition-all duration-300 ${
-                    chapter === index
-                      ? "w-10 bg-[#0C64D5]"
-                      : "w-8 bg-[#C9DFF3] hover:bg-[#8BBCEB]"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={() => goToChapter(chapter + 1)}
-              aria-label="Next chapter"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#D4E6F8] bg-white text-[#0C64D5] xl:hidden"
-            >
-              <ArrowRight size={18} />
-            </button>
+            ))}
           </div>
         </div>
+
+        {/* SMALL SCREENS:
+            Keep stories readable without clipping
+            or trapping the user's page scroll. */}
+        <div className="space-y-8 lg:hidden">
+          {stories.map((story, index) => (
+            <div
+              key={story.id}
+              className="h-auto"
+            >
+              <StoryPanel story={story} index={index} />
+            </div>
+          ))}
+        </div>
+
+        {/* Section ending */}
+        <div className="mx-auto mt-12 max-w-[580px] text-center lg:mt-16">
+          <div className="h-px bg-gradient-to-r from-transparent via-[#9FC9EC] to-transparent" />
+
+          <p className="mt-7 font-serif text-[clamp(1.6rem,2.8vw,2.7rem)] italic text-[#2466A3]">
+            Small steps. Lasting change.
+          </p>
+        </div>
       </div>
-
-      {/* Bottom soft-blue landscape */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[155px] w-full sm:h-[190px]"
-        viewBox="0 0 1600 190"
-        preserveAspectRatio="none"
-        fill="none"
-      >
-        <path
-          d="M0 80 C260 145 530 180 830 165 C1160 148 1390 83 1600 12 V190 H0Z"
-          fill="#E3F1FE"
-        />
-
-        <path
-          d="M0 125 C300 180 600 190 900 174 C1200 162 1420 110 1600 57 V190 H0Z"
-          fill="#CAE5FB"
-          fillOpacity="0.65"
-        />
-      </svg>
     </section>
   );
 }
